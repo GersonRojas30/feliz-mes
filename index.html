@@ -431,6 +431,29 @@
 </head>
 <body>
 
+<!-- Música de fondo: Anıl Emre Daldal - M. -->
+<!-- Reemplaza YOUTUBE_VIDEO_ID por el ID del video (la parte después de v= en la URL de YouTube) -->
+<div id="bg-music-player" style="position:fixed; width:1px; height:1px; opacity:0; pointer-events:none;"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let bgPlayer;
+  function onYouTubeIframeAPIReady() {
+    bgPlayer = new YT.Player('bg-music-player', {
+      height: '1',
+      width: '1',
+      videoId: 'YOUTUBE_VIDEO_ID',
+      playerVars: { autoplay: 1, loop: 1, playlist: 'YOUTUBE_VIDEO_ID', controls: 0 },
+      events: {
+        'onReady': (e) => { e.target.setVolume(50); e.target.playVideo(); }
+      }
+    });
+  }
+  // Algunos navegadores bloquean el autoplay con sonido hasta la primera interacción del usuario
+  document.addEventListener('click', () => {
+    if (bgPlayer && bgPlayer.playVideo) bgPlayer.playVideo();
+  }, { once: true });
+</script>
+
 <div class="glow-orb one"></div>
 <div class="glow-orb two"></div>
 <div class="glow-orb three"></div>
