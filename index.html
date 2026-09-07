@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>💕 feliz mes by Cass</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.youtube.com/iframe_api"></script>
 <style>
   :root {
     --bg-top: #33122f;
@@ -434,9 +435,10 @@
 <!-- Música de fondo: Anıl Emre Daldal - M. -->
 <!-- Video: https://youtu.be/41IaR01vEb0 -->
 <div id="bg-music-player" style="position:fixed; width:1px; height:1px; opacity:0; pointer-events:none;"></div>
-<script src="https://www.youtube.com/iframe_api"></script>
 <script>
   let bgPlayer;
+  let musicUnmuted = false;
+
   function onYouTubeIframeAPIReady() {
     bgPlayer = new YT.Player('bg-music-player', {
       height: '1',
@@ -444,14 +446,28 @@
       videoId: '41IaR01vEb0',
       playerVars: { autoplay: 1, loop: 1, playlist: '41IaR01vEb0', controls: 0 },
       events: {
-        'onReady': (e) => { e.target.setVolume(50); e.target.playVideo(); }
+        'onReady': (e) => {
+          // Arranca en silencio de inmediato (esto sí lo permiten todos los navegadores)
+          e.target.setVolume(50);
+          e.target.mute();
+          e.target.playVideo();
+        }
       }
     });
   }
-  // Algunos navegadores bloquean el autoplay con sonido hasta la primera interacción del usuario
-  document.addEventListener('click', () => {
-    if (bgPlayer && bgPlayer.playVideo) bgPlayer.playVideo();
-  }, { once: true });
+
+  function unmuteMusic() {
+    if (musicUnmuted) return;
+    musicUnmuted = true;
+    if (bgPlayer && bgPlayer.unMute) {
+      bgPlayer.unMute();
+      bgPlayer.playVideo();
+    }
+  }
+  // En el primer toque/clic/tecla de la persona, se activa el sonido real
+  document.addEventListener('click', unmuteMusic, { once: true });
+  document.addEventListener('keydown', unmuteMusic, { once: true });
+  document.addEventListener('touchstart', unmuteMusic, { once: true });
 </script>
 
 <div class="glow-orb one"></div>
